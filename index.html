@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kalkulator</title>
+<style>
+body {
+  background: #121212;
+  color: #fff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+.container {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 15px;
+  width: 320px;
+}
+.mode-switch {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 15px;
+}
+.mode-switch button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  background: #333;
+  color: white;
+  border-radius: 10px;
+  margin: 0 5px;
+}
+.mode-switch button.active {
+  background: #00aaff;
+}
+.display {
+  background: #000;
+  padding: 15px;
+  border-radius: 10px;
+  text-align: right;
+  font-size: 20px;
+  overflow-x: auto;
+  white-space: nowrap;
+  margin-bottom: 10px;
+}
+.buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+.bottom-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 8px;
+  gap: 8px;
+}
+button {
+  padding: 18px;
+  font-size: 16px;
+  border: none;
+  border-radius: 10px;
+  background: #333;
+  color: white;
+  cursor: pointer;
+}
+button:hover { background: #444; }
+.equal { background: #00c853; }
+.clear { background: #d50000; }
+.back { background: #ff9100; }
+.history {
+  margin-top: 12px;
+  background: #222;
+  padding: 8px;
+  border-radius: 10px;
+  max-height: 100px;
+  overflow-y: auto;
+  font-size: 14px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="mode-switch">
+    <button id="simpleBtn" class="active">Sederhana</button>
+    <button id="advancedBtn">Lengkap</button>
+  </div>
+  <div class="display" id="display">0</div>
+
+  <!-- Mode sederhana -->
+  <div class="buttons simple-mode">
+    <button>7</button><button>8</button><button>9</button><button>/</button>
+    <button>4</button><button>5</button><button>6</button><button>*</button>
+    <button>1</button><button>2</button><button>3</button><button>-</button>
+    <button>0</button><button>.</button><button>%</button><button>+</button>
+  </div>
+
+  <!-- Mode lengkap -->
+  <div class="buttons advanced-mode" style="display:none;">
+    <button>7</button><button>8</button><button>9</button><button>/</button>
+    <button>4</button><button>5</button><button>6</button><button>*</button>
+    <button>1</button><button>2</button><button>3</button><button>-</button>
+    <button>0</button><button>.</button><button>%</button><button>+</button>
+    <button>√</button><button>^</button><button>(</button><button>)</button>
+    <button>sin</button><button>cos</button><button>tan</button><button>log</button>
+  </div>
+
+  <div class="bottom-buttons">
+    <button class="equal">=</button>
+    <button class="clear">C</button>
+    <button class="back">⌫</button>
+  </div>
+
+  <div class="history" id="history"></div>
+</div>
+
+<script>
+const display = document.getElementById("display");
+const historyDiv = document.getElementById("history");
+let current = "";
+
+function formatNumber(numStr) {
+  return numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function formatExpression(expr) {
+  return expr.replace(/\d+(\.\d+)?/g, match => formatNumber(match));
+}
+
+function updateDisplay() {
+  display.textContent = current ? formatExpression(current) : "0";
+}
+
+function addToHistory(expr, result) {
+  const p = document.createElement("p");
+  p.textContent = formatExpression(expr) + " = " + formatNumber(result.toString());
+  historyDiv.prepend(p);
+}
+
+function calculate(expr) {
+  try {
+    expr = expr.replace(/√/g, "Math.sqrt")
+               .replace(/\^/g, "**")
+               .replace(/sin/g, "Math.sin")
+               .replace(/cos/g, "Math.cos")
+               .replace(/tan/g, "Math.tan")
+               .replace(/log/g, "Math.log10")
+               .replace(/%/g, "/100");
+    let result = eval(expr);
+    if (!isFinite(result)) throw Error();
+    addToHistory(current, result);
+    current = result.toString();
+  } catch {
+    current = "Error";
+  }
+  updateDisplay();
+}
+
+document.querySelectorAll(".buttons button").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    current += btn.textContent;
+    updateDisplay();
+  });
+});
+
+document.querySelector(".equal").addEventListener("click", ()=> calculate(current));
+document.querySelector(".clear").addEventListener("click", ()=>{current="";updateDisplay();});
+document.querySelector(".back").addEventListener("click", ()=>{current=current.slice(0,-1);updateDisplay();});
+
+document.getElementById("simpleBtn").addEventListener("click", ()=>{
+  document.querySelector(".simple-mode").style.display="grid";
+  document.querySelector(".advanced-mode").style.display="none";
+  document.getElementById("simpleBtn").classList.add("active");
+  document.getElementById("advancedBtn").classList.remove("active");
+});
+document.getElementById("advancedBtn").addEventListener("click", ()=>{
+  document.querySelector(".simple-mode").style.display="none";
+  document.querySelector(".advanced-mode").style.display="grid";
+  document.getElementById("advancedBtn").classList.add("active");
+  document.getElementById("simpleBtn").classList.remove("active");
+});
+</script>
+</body>
+</html>
