@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SELAMAT SEMHAS, JUSPIANA! 🎓</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fad390, #a1c4fd, #c2e9fb);
+      background-size: 400% 400%;
+      animation: gradientBG 10s ease infinite;
+      color: #fff;
+      overflow: hidden;
+      text-align: center;
+    }
+
+    @keyframes gradientBG {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+
+    .slideshow-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+    }
+
+    .slide {
+      display: none;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    .slide img {
+      max-width: 80%;
+      max-height: 55vh;
+      margin-top: 60px;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      animation: zoomIn 1.5s ease;
+    }
+
+    @keyframes zoomIn {
+      from {transform: scale(0.9); opacity: 0;}
+      to {transform: scale(1); opacity: 1;}
+    }
+
+    .text {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 22px;
+      font-weight: bold;
+      color: #fff;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+      animation: floatUp 2s ease;
+      padding: 12px 20px;
+      border-radius: 15px;
+      background: rgba(0,0,0,0.4);
+    }
+
+    @keyframes floatUp {
+      from {transform: translate(-50%, 40px); opacity: 0;}
+      to {transform: translate(-50%, 0); opacity: 1;}
+    }
+
+    /* Ornamen confetti */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      background: #fff;
+      top: -10px;
+      animation: fall linear forwards;
+      opacity: 0.8;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    .music-control {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: rgba(0,0,0,0.6);
+      padding: 12px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="slideshow-container">
+
+  <div class="slide fade">
+    <img src="https://a-bpay.com/imgku/1756628131855.jpg" alt="Foto 1">
+    <div class="text">🎉 Selamat! Kamu berhasil menyelesaikan Seminar Hasil🎓</div>
+  </div>
+
+  <div class="slide fade">
+    <img src="https://a-bpay.com/imgku/1756628187977.jpg" alt="Foto 2">
+    <div class="text">Perjalanan ini baru dimulai. Masih panjang jalan yang kamu tempuh 🌟</div>
+  </div>
+
+  <div class="slide fade">
+    <img src="https://a-bpay.com/imgku/1756628187977_1.jpg" alt="Foto 3">
+    <div class="text">💪 Teruslah berjuang, Revisi, Sidang Akhir dan lain-lain, semangat! ✨</div>
+  </div>
+
+  <div class="slide fade">
+    <img src="https://a-bpay.com/imgku/1756628194016.jpg" alt="Foto 4">
+    <div class="text">Semangat terus, kamu pasti bisa, bismillah. 🎉</div>
+  </div>
+
+</div>
+
+<!-- Musik Happy -->
+<audio id="bg-music" autoplay loop>
+  <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg">
+</audio>
+<div class="music-control" onclick="toggleMusic()">🎵</div>
+
+<script>
+let slideIndex = 0;
+showSlides();
+
+function showSlides() {
+  let i;
+  let slides = document.getElementsByClassName("slide");
+  for (i = 0; i < slides.length; i++) {
+    slides[i].style.display = "none";  
+  }
+  slideIndex++;
+  if (slideIndex > slides.length) {slideIndex = 1}    
+  slides[slideIndex-1].style.display = "block";  
+  setTimeout(showSlides, 5000); // 5 detik per slide
+}
+
+/* Confetti Generator */
+function createConfetti() {
+  const confetti = document.createElement("div");
+  confetti.classList.add("confetti");
+  document.body.appendChild(confetti);
+
+  const colors = ["#ff0", "#0ff", "#f0f", "#0f0", "#ff5733", "#ffd700"];
+  confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+  confetti.style.left = Math.random() * window.innerWidth + "px";
+  confetti.style.animationDuration = 3 + Math.random() * 5 + "s";
+
+  setTimeout(() => confetti.remove(), 8000);
+}
+
+setInterval(createConfetti, 300);
+
+function toggleMusic() {
+  let music = document.getElementById("bg-music");
+  if (music.paused) {
+    music.play();
+  } else {
+    music.pause();
+  }
+}
+</script>
+
+</body>
+</html>
